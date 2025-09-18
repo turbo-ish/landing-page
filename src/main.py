@@ -1,6 +1,10 @@
+import base64
 import sqlite3
+from io import BytesIO
 
 from flask import Flask, render_template, request
+from qrcode.main import make
+
 from dbhandler import add_vote_record, add_loc_record
 
 app = Flask(__name__)
@@ -19,6 +23,16 @@ def landing(qr_id: int):
 
     return render_template('landing.html', qr_id=qr_id)
 
+@app.route('/<int:qr_id>/qr', methods=['GET'])
+def qrcode(qr_id: int):
+    data = "movetogether.now/" + str(qr_id)
+    img = make(data)
+
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG")
+    img_bin = base64.b64encode(buffer.getvalue()).decode('ascii')
+
+    return '<img src="data:image/jpeg;base64,' + img_bin + '"/>'
 
 @app.route("/setqrloc", methods=['GET', 'POST'])
 def set_qr_loc():
