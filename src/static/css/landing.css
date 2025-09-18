@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #aa0329 0%, #d4456b 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.vote-form {
+    margin-bottom: 20px;
+}
+
+.btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 8px 0;
+    transition: all 0.2s ease;
+}
+
+.btn-yes {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-yes:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+.btn-no {
+    background: #FF9800;
+    color: white;
+}
+
+.btn-no:hover {
+    background: #e68900;
+    transform: translateY(-2px);
+}
+
+.location-id {
+    background: #f5f5f5;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: none;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 20px;
+}
+
+input[type="hidden"] {
+    display: none;
+}
+
+.logo-container {
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+
+.logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+
+}
+
+.logo.loaded {
+    opacity: 1;
+}

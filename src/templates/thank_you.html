@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -132,10 +130,15 @@
             font-style: italic;
         }
     </style>
-</head>
+    </head>
 <body>
     <div class="container">
-        <img src="/static/img/movetogetherlogo.png" alt="MoveTogether Logo" class="logo">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='img/movetogetherlogo.jpg') }}" 
+                 alt="MoveTogether Logo" 
+                 class="logo"
+                 onload="this.classList.add('loaded')">
+        </div>
         
         <div class="checkmark">✓</div>
         

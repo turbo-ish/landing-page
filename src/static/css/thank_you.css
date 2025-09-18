@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #aa0329 0%, #d4456b 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+.checkmark {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #4CAF50;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.message {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.next-steps {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.next-steps h3 {
+    color: #aa0329;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.next-steps ul {
+    list-style: none;
+    padding: 0;
+}
+
+.next-steps li {
+    padding: 5px 0;
+    color: #555;
+    position: relative;
+    padding-left: 20px;
+}
+
+.next-steps li:before {
+    content: "•";
+    color: #aa0329;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.social-btn {
+    padding: 12px 20px;
+    border: 2px solid #aa0329;
+    border-radius: 25px;
+    text-decoration: none;
+    color: #aa0329;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.social-btn:hover {
+    background: #aa0329;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.location-note {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+.logo-container {
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+
+.logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+
+}
+
+.logo.loaded {
+    opacity: 1;
+}
+
