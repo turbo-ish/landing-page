@@ -32,12 +32,30 @@
             width: 100%;
         }
         
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+
         .logo {
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
-            display: block;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+
         }
+
+        .logo.loaded {
+            opacity: 1;
+        }
+
         
         .checkmark {
             width: 60px;
