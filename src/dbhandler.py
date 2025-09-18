@@ -5,7 +5,7 @@ import sqlite3
 def add_vote_record(db: sqlite3.Connection, form: ImmutableMultiDict, cookies: ImmutableMultiDict):
     print(form)
     qr_id = form['qr_id']
-    taiwan = form['taiwan']
+    taiwan = form['response']
 
     cur = db.cursor()
     cur.execute("select IFNULL(MAX(seq), 0) from sqlite_sequence where name=?", ('vote2qr',))
