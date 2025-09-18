@@ -6,7 +6,7 @@ from io import BytesIO
 from flask import Flask, render_template, request, make_response, redirect, url_for
 from qrcode.main import make
 
-from .dbhandler import add_vote_record, add_loc_record
+from dbhandler import add_vote_record, add_loc_record
 
 
 
