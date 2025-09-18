@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing page</title>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column; align-items: center; justify-items: center">
+    <form  method="post">
+        <fieldset>
+            <div style="display: flex; justify-content: center">
+                <img src="{{url_for('static', filename='img/img.png')}}">
+            </div>
+            <legend style="font-size: xxx-large; text-align: center"> What heppened on Tiananmen Square 1989? </legend>
+            <div style="display: flex; justify-content: center">
+                <input type="number" id="qr_id" name="qr_id" placeholder="qr id">
+            </div>
+
+            <div style="display: flex; justify-content: center">
+                <input type="number" id="lat" name="lat" placeholder="latitude">
+                <input type="number" id="lng" name="lng" placeholder="longitude">
+            </div>
+            <div style="display: flex; justify-content: center">
+                <input type="submit" id="submit" name="submit">
+            </div>
+        </fieldset>
+    </form>
+    </div>
+</body>
+</html>

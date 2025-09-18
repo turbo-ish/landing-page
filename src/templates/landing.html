@@ -6,7 +6,7 @@
 </head>
 <body>
     <div style="display: flex; flex-direction: column; align-items: center">
-    <form action="{{url_for('record_vote')}}" method="post">
+    <form  method="post">
         <fieldset>
             <img src="{{url_for('static', filename='img/img.png')}}">
             <legend style="font-size: xxx-large; text-align: center"> Is Taiwan a country? </legend>
@@ -20,9 +20,9 @@
                 <label for="no" style="font-size: xx-large"> What is Thai One?</label>
             </div>
             </div>
-            <input type="hidden" name="qrid" value="{{qrid}}">
+            <input type="hidden" name="qr_id" value="{{qr_id}}">
             <div style="display: flex; justify-content: center">
-                <input type="submit" id="submit" name="taiwan">
+                <input type="submit" id="submit" name="submit">
             </div>
         </fieldset>
     </form>
