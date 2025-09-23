@@ -14,8 +14,8 @@ def add_vote_record(db: sqlite3.Connection, form: ImmutableMultiDict, cookies: I
     # TODO: error handling if cookie is not valid int
     vote_id = int(cookies.get('vote_id', default=str(row + 1)))
 
-    cur.execute("INSERT INTO vote2qr (id, response, qr_id) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET response = ?;",
-                (vote_id, taiwan, qr_id, taiwan))
+    cur.execute("INSERT INTO vote2qr (id, response, qr_id) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET response = ?, qr_id = ?;",
+                (vote_id, taiwan, qr_id, taiwan, qr_id))
     cur.close()
     db.commit()
 
