@@ -46,7 +46,7 @@ def landing(qr_id: int):
 
 @app.route('/<int:qr_id>/qr', methods=['GET'])
 def qrcode(qr_id: int):
-    data = "movetogether.now/" + str(qr_id)
+    data = "https://movetogether.now/" + str(qr_id)
     img = make(data)
 
     buffer = BytesIO()
