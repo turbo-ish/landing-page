@@ -28,3 +28,25 @@ def add_loc_record(db: sqlite3.Connection, form: ImmutableMultiDict):
     lng = form['lng']
     qr_id = form['qr_id']
     print(lat, lng, qr_id)
+
+def add_email_record(db: sqlite3.Connection, form: ImmutableMultiDict, cookies: ImmutableMultiDict):
+    """
+    Basic insertion of email signups. Minimal validation: non-empty and contains '@'.
+    Associates the email with vote_id if cookie 'vote_id' exists and is an int.
+    """
+    email = form.get('email', '').strip()
+    if not email or '@' not in email:
+        return None
+
+    vote_id = cookies.get('vote_id')
+    try:
+        vote_id_int = int(vote_id) if vote_id is not None else None
+    except Exception:
+        vote_id_int = None
+
+    cur = db.cursor()
+    cur.execute("INSERT INTO email_signups (email, vote_id) VALUES (?, ?);", (email, vote_id_int))
+    last_id = cur.lastrowid
+    db.commit()
+    cur.close()
+    return last_id

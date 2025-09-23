@@ -162,7 +162,15 @@
         
         <h1>Thanks!</h1>
         <p class="message">Your interest has been recorded. We'll use this to connect you with other sports enthusiasts in your area!</p>
-        </div>
+            <!-- Email signup form -->
+        {% if show_email == '1' %}
+        <form action="{{ url_for('save_email') }}" method="post" style="margin-top:18px;">
+            <input type="email" name="email" placeholder="Enter your email to stay updated" required
+                   style="width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6e6e6; margin-bottom:10px;">
+            <button type="submit" class="social-btn" style="width:100%;">Get updates</button>
+        </form>
+        {% endif %}
+    </div>
     </div>
 </body>
 </html>
