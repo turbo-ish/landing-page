@@ -4,10 +4,13 @@ from io import BytesIO
 
 
 from flask import Flask, render_template, request, make_response, redirect, url_for
+from markupsafe import Markup
 from qrcode.main import make
+import qrcode
+import qrcode.image.svg
+from werkzeug.utils import send_file
 
 from dbhandler import add_vote_record, add_loc_record, add_email_record
-
 
 
 db = sqlite3.connect("../myfuckingdb.db", check_same_thread=False)
@@ -51,15 +54,15 @@ def landing(qr_id: int):
     return render_template('landing.html', qr_id=qr_id)
 
 @app.route('/<int:qr_id>/qr', methods=['GET'])
-def qrcode(qr_id: int):
+def gen_qrcode(qr_id: int):
     data = "https://movetogether.now/" + str(qr_id)
-    img = make(data)
-
+    img = make(data, image_factory=qrcode.image.svg.SvgPathImage, version=10)
     buffer = BytesIO()
-    img.save(buffer, format="JPEG")
-    img_bin = base64.b64encode(buffer.getvalue()).decode('ascii')
+    img.save(buffer)
+    buffer.seek(0)
+    img_svg = str(buffer.read(-1), encoding="utf-8")
 
-    return '<img src="data:image/jpeg;base64,' + img_bin + '"/>'
+    return  render_template("qr.html", svg=Markup(img_svg))
 
 @app.route("/setqrloc", methods=['GET', 'POST'])
 def set_qr_loc():
