@@ -2,16 +2,16 @@ import base64
 import sqlite3
 from io import BytesIO
 
-
 from flask import Flask, render_template, request, make_response, redirect, url_for
 from markupsafe import Markup
 from qrcode.main import make
 import qrcode
 import qrcode.image.svg
+from xml.dom.minidom import parse, parseString
 from werkzeug.utils import send_file
 
 from dbhandler import add_vote_record, add_loc_record, add_email_record
-
+from src.qr_svg import make_qr_border_svg
 
 db = sqlite3.connect("../myfuckingdb.db", check_same_thread=False)
 cur = db.cursor()
@@ -41,7 +41,6 @@ def landing(qr_id: int):
 
         resp_val = (request.form.get('response') or '').strip().lower()
         show_email = '1' if resp_val in ('yes') else '0'
-
         
         # Create redirect response
         resp = make_response(redirect('/thank_you'))
@@ -55,14 +54,19 @@ def landing(qr_id: int):
 
 @app.route('/<int:qr_id>/qr', methods=['GET'])
 def gen_qrcode(qr_id: int):
-    data = "https://movetogether.now/" + str(qr_id)
-    img = make(data, image_factory=qrcode.image.svg.SvgPathImage, version=10)
-    buffer = BytesIO()
-    img.save(buffer)
-    buffer.seek(0)
-    img_svg = str(buffer.read(-1), encoding="utf-8")
+    # data = "https://movetogether.now/" + str(qr_id)
+    # img = make(data, image_factory=qrcode.image.svg.SvgPathImage, version=10)
 
-    return  render_template("qr.html", svg=Markup(img_svg))
+    # buffer = BytesIO()
+    # img.save(buffer)
+    # buffer.seek(0)
+    img_svg = make_qr_border_svg(qr_id)
+
+    root = parseString(img_svg)
+    path = root.firstChild.firstChild.toprettyxml()
+    print(path)
+
+    return render_template("qr.html", svg=Markup(img_svg))
 
 @app.route("/setqrloc", methods=['GET', 'POST'])
 def set_qr_loc():
