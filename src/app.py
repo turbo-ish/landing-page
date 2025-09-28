@@ -11,7 +11,7 @@ from xml.dom.minidom import parse, parseString
 from werkzeug.utils import send_file
 
 from dbhandler import add_vote_record, add_loc_record, add_email_record
-from src.qr_svg import make_qr_border_svg
+from qr_svg import make_qr_border_svg #pls no "from src.qr_svg" or will break on server
 
 db = sqlite3.connect("../myfuckingdb.db", check_same_thread=False)
 cur = db.cursor()
