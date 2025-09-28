@@ -1,6 +1,7 @@
 import base64
 import sqlite3
 from io import BytesIO
+import os
 
 from flask import Flask, render_template, request, make_response, redirect, url_for
 from markupsafe import Markup
@@ -13,7 +14,14 @@ from werkzeug.utils import send_file
 from dbhandler import add_vote_record, add_loc_record, add_email_record
 from qr_svg import make_qr_border_svg #pls no "from src.qr_svg" or will break on server
 
-db = sqlite3.connect("../myfuckingdb.db", check_same_thread=False)
+if os.environ.get('RUNNING_IN_DOCKER'):
+    # Docker path - uses the volume mount
+    DB_PATH = '/app/data/myfuckingdb.db'
+else:
+    # Local development path - goes up one level from src/
+    DB_PATH = '../myfuckingdb.db'
+
+db = sqlite3.connect(DB_PATH, check_same_thread=False)
 cur = db.cursor()
 cur.execute("CREATE TABLE IF NOT EXISTS qr2loc (id INTEGER PRIMARY KEY AUTOINCREMENT, lat FLOAT, lng FLOAT);")
 cur.execute("CREATE TABLE IF NOT EXISTS vote2qr (id INTEGER PRIMARY KEY AUTOINCREMENT, response TEXT, qr_id INTEGER);")
