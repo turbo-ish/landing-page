@@ -64,3 +64,45 @@ def add_email_record(db: sqlite3.Connection, form: ImmutableMultiDict, cookies: 
     db.commit()
     cur.close()
     return last_id
+
+
+def add_sports_records(db: sqlite3.Connection, form: ImmutableMultiDict, cookies: ImmutableMultiDict, language: str = 'en'):
+    """
+    Save selected sports to database.
+    Handles both predefined sports (checkboxes) and custom sports (text field).
+    Associates sports with vote_id from cookies.
+    """
+    vote_id = cookies.get('vote_id')
+    try:
+        vote_id_int = int(vote_id) if vote_id is not None else None
+    except Exception:
+        vote_id_int = None
+    
+    if vote_id_int is None:
+        return None
+    
+    cur = db.cursor()
+    
+    # Get all selected sports from checkboxes
+    selected_sports = form.getlist('sports')
+    
+    # Insert each selected predefined sport
+    for sport in selected_sports:
+        if sport.strip():
+            cur.execute(
+                "INSERT INTO user_sports (vote_id, sport, is_custom, language) VALUES (?, ?, ?, ?);",
+                (vote_id_int, sport.strip(), False, language)
+            )
+    
+    # Get custom sport from text field
+    custom_sport = form.get('custom_sport', '').strip()
+    if custom_sport:
+        cur.execute(
+            "INSERT INTO user_sports (vote_id, sport, is_custom, language) VALUES (?, ?, ?, ?);",
+            (vote_id_int, custom_sport, True, language)
+        )
+    
+    db.commit()
+    cur.close()
+    
+    return vote_id_int

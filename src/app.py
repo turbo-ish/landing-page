@@ -11,9 +11,9 @@ import qrcode.image.svg
 from xml.dom.minidom import parse, parseString
 from werkzeug.utils import send_file
 
-from dbhandler import add_vote_record, add_loc_record, add_email_record
+from dbhandler import add_vote_record, add_loc_record, add_email_record, add_sports_records
 from qr_svg import make_qr_border_svg #pls no "from src.qr_svg" or will break on server
-from translations import get_text, is_valid_lang, get_default_lang
+from translations import get_text, get_sports_list, is_valid_lang, get_default_lang
 
 if os.environ.get('RUNNING_IN_DOCKER'):
     DB_PATH = '/app/data/myfuckingdb.db'
@@ -25,6 +25,7 @@ cur = db.cursor()
 cur.execute("CREATE TABLE IF NOT EXISTS qr2loc (id INTEGER PRIMARY KEY AUTOINCREMENT, lat FLOAT, lng FLOAT);")
 cur.execute("CREATE TABLE IF NOT EXISTS vote2qr (id INTEGER PRIMARY KEY AUTOINCREMENT, response TEXT, qr_id INTEGER, language TEXT);")
 cur.execute("CREATE TABLE IF NOT EXISTS email_signups (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, vote_id INTEGER, language TEXT);")
+cur.execute("CREATE TABLE IF NOT EXISTS user_sports (id INTEGER PRIMARY KEY AUTOINCREMENT, vote_id INTEGER, sport TEXT, is_custom BOOLEAN, language TEXT);")
 cur.close()
 
 app = Flask(__name__)
@@ -72,15 +73,20 @@ def landing(lang: str, qr_id: int):
         vote_id = add_vote_record(db, form_data_with_lang, request.cookies, lang)
 
         resp_val = (request.form.get('response') or '').strip().lower()
-        show_email = '1' if resp_val in ('yes') else '0'
         
-        # Create redirect response with language
-        resp = make_response(redirect(url_for('thanks', lang=lang)))
-        resp.set_cookie('vote_id', str(vote_id))
-        resp.set_cookie('show_email_form', show_email)
-        resp.set_cookie('language', lang)  # Store language preference
-
-        return resp
+        # If user said "yes", redirect to sports selection
+        if resp_val == 'yes':
+            resp = make_response(redirect(url_for('sports_selection', lang=lang)))
+            resp.set_cookie('vote_id', str(vote_id))
+            resp.set_cookie('language', lang)
+            return resp
+        else:
+            # If "no", go straight to thank you without email form
+            resp = make_response(redirect(url_for('thanks', lang=lang)))
+            resp.set_cookie('vote_id', str(vote_id))
+            resp.set_cookie('show_email_form', '0')
+            resp.set_cookie('language', lang)
+            return resp
     
     # Handle GET request - show the voting form
     return render_template(
@@ -89,6 +95,40 @@ def landing(lang: str, qr_id: int):
         lang=lang,
         t=lambda key: get_text(lang, key)
     )
+
+
+@app.route('/<lang>/sports', methods=['GET'])
+def sports_selection(lang):
+    """Sports selection page - shown after user clicks 'Yes'."""
+    if not is_valid_lang(lang):
+        lang = get_default_lang()
+    
+    # Get sports list for the selected language
+    sports_list = get_sports_list(lang)
+    
+    return render_template(
+        'sports_selection.html',
+        lang=lang,
+        sports_list=sports_list,
+        t=lambda key: get_text(lang, key)
+    )
+
+
+@app.route('/<lang>/save_sports', methods=['POST'])
+def save_sports(lang):
+    """Save selected sports to database."""
+    if not is_valid_lang(lang):
+        lang = request.cookies.get('language', get_default_lang())
+    
+    # Save sports selections
+    add_sports_records(db, request.form, request.cookies, lang)
+    
+    # Redirect to thank you page with email form
+    resp = make_response(redirect(url_for('thanks', lang=lang)))
+    resp.set_cookie('show_email_form', '1')
+    resp.set_cookie('language', lang)
+    
+    return resp
 
 
 # Legacy route redirect - for backwards compatibility
