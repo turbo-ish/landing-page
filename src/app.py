@@ -138,10 +138,14 @@ def landing_no_lang(qr_id: int):
     return redirect(url_for('landing', lang=get_default_lang(), qr_id=qr_id))
 
 
-@app.route('/<int:qr_id>/qr', methods=['GET'])
-def gen_qrcode(qr_id: int):
+@app.route('/<lang>/<int:qr_id>/qr', methods=['GET'])
+def gen_qrcode(lang: str, qr_id: int):
     """Generate QR code - internal use."""
-    img_svg = make_qr_border_svg(qr_id)
+
+    if lang == 'nl':
+        img_svg = make_qr_border_svg(qr_id=qr_id, top_text="movetogether.now", bottom_text="SCAN MIJ · GA NU SPORTEN")
+    else:
+        img_svg = make_qr_border_svg(qr_id, top_text="movetogether.now", bottom_text="SCAN ME · DO SPORTS NOW")
 
     root = parseString(img_svg)
     path = root.firstChild.firstChild.toprettyxml()

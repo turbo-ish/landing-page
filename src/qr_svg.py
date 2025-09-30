@@ -11,8 +11,8 @@ from qrcode.image.styles.colormasks import RadialGradiantColorMask
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer, CircleModuleDrawer
 
 
-def make_qr_border_svg(qr_id: int, size_px=850, ring_radius=310, ring_width=50, top_text="movetogether.now",
-                        bottom_text="SCAN ME · DO SPORTS NOW", top_font_px=60, bottom_font_px=60, text_color="#000000",
+def make_qr_border_svg(qr_id: int, top_text: str, bottom_text: str, size_px=850, ring_radius=310, ring_width=50,
+                       top_font_px=60, bottom_font_px=60, text_color="#000000",
                         gap_top=60, gap_bottom=20) -> string :
     cx = cy = size_px / 2
     r = ring_radius
