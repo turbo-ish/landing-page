@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="running-track" xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 148 210" width="148mm" height="210mm">
+
+  <!-- ====== CONFIG ====== -->
+  <!-- Track color, line color -->
+  <defs>
+    <linearGradient id="trackRed" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#C63A24"/>
+      <stop offset="1" stop-color="#E5552F"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Optional background (transparent by default) -->
+  <rect x="0" y="0" width="148" height="210" fill="none"/>
+
+  <!-- ====== TRACK SHAPE (perspective) ====== -->
+  <!-- Tapered red polygon (like the poster) -->
+  <!-- Bottom width spans almost full page; converges to a point near the middle top -->
+  <polygon fill="url(#trackRed)"
+           points="
+             4,210     144,210      86,60      62,60
+           "/>
+
+  <!-- Slight highlight down the middle (subtle depth) -->
+  <path d="M73,210 L74,210  74,60" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+
+  <!-- ====== LANE LINES (converging) ====== -->
+  <!-- Adjust 'bottomXs' to change number/spacing of lanes -->
+  <!-- We draw 6 inner lane lines + two edge lines -->
+  <!-- Edge lines -->
+  <path d="M 10 210 L 65 60" stroke="#FFFFFF" stroke-width="1.2"/>
+  <path d="M 138 210 L 83 60" stroke="#FFFFFF" stroke-width="1.2"/>
+
+  <!-- Inner lane lines -->
+  <path d="M 28 210 L 68 60" stroke="#FFFFFF" stroke-width="1.2"/>
+  <path d="M 46 210 L 71 60" stroke="#FFFFFF" stroke-width="1.2"/>
+  <path d="M 64 210 L 72.5 60" stroke="#FFFFFF" stroke-width="1.2"/>
+  <path d="M 82 210 L 74 60" stroke="#FFFFFF" stroke-width="1.2"/>
+  <path d="M100 210 L 76 60" stroke="#FFFFFF" stroke-width="1.2"/>
+  <path d="M118 210 L 79 60" stroke="#FFFFFF" stroke-width="1.2"/>
+
+  <!-- ====== START-LINE ARCS (bottom curves) ====== -->
+  <!-- Concentric arcs centered near the page bottom to mimic lane markings -->
+  <!-- Center and radii chosen to sit within the polygon; tweak cx/cy/r as needed -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="1.2">
+    <!-- Big outer arc -->
+    <path d="
+      M 6,210
+      A 140 140 0 0 1 142 210
+    "/>
+    <!-- Inner arcs -->
+    <path d="
+      M 18,210
+      A 122 122 0 0 1 130 210
+    "/>
+    <path d="
+      M 30,210
+      A 104 104 0 0 1 118 210
+    "/>
+    <path d="
+      M 42,210
+      A 86 86 0 0 1 106 210
+    "/>
+  </g>
+
+  <!-- Soft vignette at horizon for depth (optional) -->
+  <rect x="58" y="56" width="32" height="8" fill="#FFFFFF" opacity="0.08" rx="4"/>
+
+</svg>
