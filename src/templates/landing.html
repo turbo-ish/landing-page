@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="preload" as="image" href="{{ url_for('static', filename='img/movetogetherlogo.jpg') }}">
@@ -14,7 +14,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Sports Buddies</title>
+    <title>{{ t('title') }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
 
 </head>
@@ -26,21 +26,20 @@
                  class="logo"
                  onload="this.classList.add('loaded')">
         </div>
-        <h1>Find Sports Buddies!</h1>
-    <p class="subtitle">Interested in connecting with others for sports activities?<br>
-    We want to build an App for this!</p>
+        <h1>{{ t('title') }}</h1>
+        <p class="subtitle">{{ t('subtitle') | safe }}</p>
         
         <form method="POST" class="vote-form">
             <button type="submit" name="response" value="yes" class="btn btn-yes">
-                Yes, I'm interested! 🔥
+                {{ t('yes_button') }}
             </button>
             <button type="submit" name="response" value="no" class="btn btn-no">
-                Probably not
+                {{  t('no_button') }}
             </button>
             <input type="hidden" name="qr_id" value="{{ qr_id }}">
         </form>
         
-        <div class="location-id">Location ID: {{ qr_id }}</div>
+        <div class="location-id">{{ t('location_id') }} {{ qr_id }}</div>
     </div>
 </body>
 </html>

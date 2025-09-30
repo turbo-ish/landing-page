@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thanks! - MoveTogether</title>
+    <title>{{ t('thank_you_title') }} - MoveTogether</title>
     <style>
         * {
             margin: 0;
@@ -42,20 +42,17 @@
             margin: 0 auto;
         }
 
-
         .logo {
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
-
         }
 
         .logo.loaded {
             opacity: 1;
         }
-
         
         .checkmark {
             width: 60px;
@@ -133,12 +130,28 @@
             font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.2s ease;
+            background: white;
+            cursor: pointer;
+            width: 100%;
         }
         
         .social-btn:hover {
             background: #aa0329;
             color: white;
             transform: translateY(-1px);
+        }
+        
+        .email-form {
+            margin-top: 18px;
+        }
+        
+        .email-input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #e6e6e6;
+            margin-bottom: 10px;
+            font-size: 1rem;
         }
         
         .location-note {
@@ -148,7 +161,7 @@
             font-style: italic;
         }
     </style>
-    </head>
+</head>
 <body>
     <div class="container">
         <div class="logo-container">
@@ -160,17 +173,20 @@
         
         <div class="checkmark">✓</div>
         
-        <h1>Thanks!</h1>
-        <p class="message">Your interest has been recorded. We'll use this to connect you with other sports enthusiasts in your area!</p>
-            <!-- Email signup form -->
+        <h1>{{ t('thank_you_title') }}</h1>
+        <p class="message">{{ t('thank_you_message') }}</p>
+        
+        <!-- Email signup form -->
         {% if show_email == '1' %}
-        <form action="{{ url_for('save_email') }}" method="post" style="margin-top:18px;">
-            <input type="email" name="email" placeholder="Enter your email to stay updated" required
-                   style="width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6e6e6; margin-bottom:10px;">
-            <button type="submit" class="social-btn" style="width:100%;">Get updates</button>
+        <form action="{{ url_for('save_email', lang=lang) }}" method="post" class="email-form">
+            <input type="email" 
+                   name="email" 
+                   placeholder="{{ t('email_placeholder') }}" 
+                   required
+                   class="email-input">
+            <button type="submit" class="social-btn">{{ t('get_updates') }}</button>
         </form>
         {% endif %}
-    </div>
     </div>
 </body>
 </html>
