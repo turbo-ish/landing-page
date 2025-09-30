@@ -71,6 +71,8 @@ def add_sports_records(db: sqlite3.Connection, form: ImmutableMultiDict, cookies
     Save selected sports to database.
     Handles both predefined sports (checkboxes) and custom sports (text field).
     Associates sports with vote_id from cookies.
+    
+    OVERWRITES any existing sports for this vote_id (clears old selections first).
     """
     vote_id = cookies.get('vote_id')
     try:
@@ -82,6 +84,9 @@ def add_sports_records(db: sqlite3.Connection, form: ImmutableMultiDict, cookies
         return None
     
     cur = db.cursor()
+    
+    # Delete all existing sports for this vote_id (prevents duplicates on re-voting)
+    cur.execute("DELETE FROM user_sports WHERE vote_id = ?;", (vote_id_int,))
     
     # Get all selected sports from checkboxes
     selected_sports = form.getlist('sports')
