@@ -1,18 +1,12 @@
-import base64
-import sqlite3
-from io import BytesIO
 import os
+import sqlite3
+from xml.dom.minidom import parseString
 
 from flask import Flask, render_template, request, make_response, redirect, url_for
 from markupsafe import Markup
-from qrcode.main import make
-import qrcode
-import qrcode.image.svg
-from xml.dom.minidom import parse, parseString
-from werkzeug.utils import send_file
 
 from dbhandler import add_vote_record, add_loc_record, add_email_record, add_sports_records
-from qr_svg import make_qr_border_svg #pls no "from src.qr_svg" or will break on server
+from qr_svg import make_qr_border_svg  # pls no "from src.qr_svg" or will break on server
 from translations import get_text, get_sports_list, is_valid_lang, get_default_lang
 
 if os.environ.get('RUNNING_IN_DOCKER'):
@@ -144,10 +138,15 @@ def landing_no_lang(qr_id: int):
     return redirect(url_for('landing', lang=get_default_lang(), qr_id=qr_id))
 
 
-@app.route('/<int:qr_id>/qr', methods=['GET'])
-def gen_qrcode(qr_id: int):
+@app.route('/<lang>/<int:qr_id>/qr', methods=['GET'])
+def gen_qrcode(lang: str, qr_id: int):
     """Generate QR code - internal use."""
-    img_svg = make_qr_border_svg(qr_id)
+
+    if lang == 'nl':
+        img_svg = make_qr_border_svg(qr_id=qr_id, top_text="movetogether.now", bottom_text="SCAN MIJ · GA NU SPORTEN",
+                                     lang=lang)
+    else:
+        img_svg = make_qr_border_svg(qr_id, top_text="movetogether.now", bottom_text="SCAN ME · DO SPORTS NOW", lang=lang)
 
     root = parseString(img_svg)
     path = root.firstChild.firstChild.toprettyxml()
