@@ -31,6 +31,12 @@ cur.close()
 app = Flask(__name__)
 
 
+@app.route('/')
+def index():
+    """Redirect base URL to default landing page (QR #500)."""
+    return redirect(url_for('landing', lang=get_default_lang(), qr_id=500))
+
+
 @app.route('/thank_you')
 @app.route('/<lang>/thank_you')
 def thanks(lang=None):
