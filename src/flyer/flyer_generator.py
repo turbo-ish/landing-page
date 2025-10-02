@@ -4,6 +4,8 @@ import base64
 import mimetypes
 from urllib.parse import quote
 
+PX_TO_MM = 0.264583  # 1px ≈ 0.264583 mm (96 dpi)
+
 def data_uri_from_file(path: Path) -> str:
     mime, _ = mimetypes.guess_type(path.as_posix())
     if mime is None:
@@ -23,6 +25,22 @@ def add_svg(dwg, path: Path, insert, size, opacity=1.0):
         img.update({"opacity": opacity})
     return img
 
+def _inject_custom_font_css(dwg, custom_font_txt: Path):
+    font_url = custom_font_txt.read_text(encoding="utf-8").strip()
+    css = f"""
+    @font-face {{
+      font-family: 'CustomFont';
+      src: url({font_url}) format('opentype');
+      font-display: swap;
+    }}
+    .title-text {{
+      font-family: 'CustomFont', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.7px;
+    }}
+    """
+    dwg.defs.add(dwg.style(css))
+
 def create_flyer(output_file="flyer_a5.svg"):
     width_mm, height_mm = 148, 210
     base = Path("assets")
@@ -30,8 +48,29 @@ def create_flyer(output_file="flyer_a5.svg"):
     dwg = svgwrite.Drawing(output_file, size=(f"{width_mm}mm", f"{height_mm}mm"),
                            viewBox=f"0 0 {width_mm} {height_mm}")
 
+    # Fond
     dwg.add(dwg.rect(insert=(0, 0), size=(width_mm, height_mm), fill="white"))
 
+    # ----- Décor: border1.svg plein format en arrière-plan -----
+    border_path = base / "design" / "border1.svg"
+    # Ajuste l'opacité si besoin (0.15–0.4 fonctionne bien)
+    border_height_mm = 90
+    border_img = add_svg(
+        dwg,
+        border_path,
+        insert=(0, height_mm - border_height_mm + 10),
+        size=(width_mm, border_height_mm),
+        opacity=0.6
+    )
+    border_img.attribs["preserveAspectRatio"] = "xMidYMid slice"
+    dwg.add(border_img)
+
+    # -----------------------------------------------------------
+
+    # Police Custom
+    _inject_custom_font_css(dwg, Path("../custom_font.txt"))
+
+    # Athlètes (inchangé)
     athletes = dwg.g(id="athletes", opacity=1)
     athletes.add(add_svg(dwg, base/"sports"/"soccer.svg",
                          insert=(width_mm/2 - 15, height_mm/2 - 95), size=(40, 40)))
@@ -47,34 +86,50 @@ def create_flyer(output_file="flyer_a5.svg"):
                          insert=(width_mm/2 + 30 , height_mm/2 - 100), size=(40, 40)))
     dwg.add(athletes)
 
+    # Titre + logo
     title = "MOVE TOGETHER"
-    x, y = width_mm/2, height_mm/2
-    style = "letter-spacing:1px; word-spacing:6px;"
-    shadow = "#eeeeee"
+    center_y = height_mm / 2
+
+    font_px = 13
     color = "#E67342"
+    left_margin_mm = 6
 
-    for off in (3, 1):
-        dwg.add(dwg.text(title, insert=(x+off, y+off), text_anchor="middle",
-                         font_size="15px", font_family="Impact, Arial Black, sans-serif",
-                         font_weight="bold", font_style="italic",
-                         fill=shadow, style=style))
+    approx_char_width_px = 0.6 * font_px
+    text_width_px = approx_char_width_px * len(title)
+    text_width_mm = text_width_px * PX_TO_MM
 
-    dwg.add(dwg.text(title, insert=(x, y), text_anchor="middle",
-                     font_size="15px", font_family="Impact, Arial Black, sans-serif",
-                     font_weight="bold", font_style="italic",
-                     fill=color, style=style))
+    logo_scale = 8
+    logo_h_mm = (font_px * logo_scale) * PX_TO_MM
+    logo_w_mm = logo_h_mm
+    gap_mm = 85
 
-    halo_w, halo_h = 34, 34
-    halo_x, halo_y = width_mm/2 - halo_w/2, 160
-    dwg.add(dwg.rect(insert=(halo_x, halo_y), size=(halo_w, halo_h),
-                     rx=8, ry=8, fill="white", opacity=0.9))
+    x_text = left_margin_mm
+    y_text = center_y
+    x_logo = x_text + text_width_mm + gap_mm
+    y_logo = center_y - (logo_h_mm / 2)
 
-    logo_w, logo_h = 70, 70
-    logo_x, logo_y = width_mm/2 - logo_w/2, halo_y + (halo_h - logo_h)/2
+    dwg.add(dwg.text(
+        title,
+        insert=(x_text, y_text),
+        text_anchor="start",
+        dominant_baseline="middle",
+        class_="title-text",
+        font_size=f"{font_px}px",
+        fill=color
+    ))
+
     logo_uri = data_uri_from_file(base/"logos"/"logo_round_2.png")
-    logo = dwg.image(href=logo_uri, insert=(logo_x, logo_y), size=(logo_w, logo_h))
-    logo.attribs["preserveAspectRatio"] = "xMidYMid meet"
-    dwg.add(logo)
+    logo_img = dwg.image(href=logo_uri, insert=(x_logo, y_logo), size=(logo_w_mm, logo_h_mm))
+    logo_img.attribs["preserveAspectRatio"] = "xMidYMid meet"
+    dwg.add(logo_img)
+
+    # QR au centre sous le bloc texte+logo
+    qr_path = base / "qr" / "qr_border.svg"
+    qr_size_mm = 60
+    qr_x = (width_mm - qr_size_mm) / 2
+    qr_y = y_text + logo_h_mm / 2   # espace de 12 mm sous le titre+logo
+    qr_img = add_svg(dwg, qr_path, insert=(qr_x, qr_y), size=(qr_size_mm, qr_size_mm))
+    dwg.add(qr_img)
 
     dwg.save()
     print(f"flyer generated : {output_file}")
