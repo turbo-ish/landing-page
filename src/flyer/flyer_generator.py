@@ -1,3 +1,6 @@
+from io import BytesIO
+
+import qrcode
 import svgwrite
 from pathlib import Path
 import base64
@@ -77,19 +80,20 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
 
     athletes = dwg.g(id="athletes", opacity=1)
 
-    for i in range(0, 3):
-        athletes.add(add_svg(dwg, base/"sports"/"soccer.svg",
-                             insert=(width_mm/2 - 15, height_mm/2 - 95 + 80 * i), size=(40, 40)))
-        athletes.add(add_svg(dwg, base/"sports"/"runner.svg",
-                             insert=(width_mm/2 - 65, height_mm/2 - 95 + 80 * i), size=(40, 40)))
-        athletes.add(add_svg(dwg, base/"sports"/"bicycle.svg",
-                             insert=(width_mm/2 - 65, height_mm/2 - 55 + 80 * i), size=(40, 40)))
-        athletes.add(add_svg(dwg, base/"sports"/"fitness.svg",
-                             insert=(width_mm/2 - 15, height_mm/2 - 55 + 80 * i), size=(40, 40)))
-        athletes.add(add_svg(dwg, base/"sports"/"tennisplayer.svg",
-                             insert=(width_mm/2 + 30, height_mm/2 - 55 + 80 * i), size=(40, 40)))
-        athletes.add(add_svg(dwg, base/"sports"/"basketplayer.svg",
-                             insert=(width_mm/2 + 30 , height_mm/2 - 100 + 80 * i), size=(40, 40)))
+    athletes.add(add_svg(dwg, base/"sports"/"soccer.svg",
+                         insert=(width_mm/2 - 15, height_mm/2 - 100), size=(40, 40)))
+    athletes.add(add_svg(dwg, base/"sports"/"runner.svg",
+                         insert=(width_mm/2 - 65, height_mm/2 - 100), size=(40, 40)))
+    athletes.add(add_svg(dwg, base/"sports"/"basketplayer.svg",
+                         insert=(width_mm/2 + 30 , height_mm/2 - 100), size=(40, 40)))
+
+    athletes.add(add_svg(dwg, base/"sports"/"bicycle.svg",
+                         insert=(width_mm/2 - 67, height_mm/2 - 60 + 110), size=(40, 40)))
+    athletes.add(add_svg(dwg, base/"sports"/"fitness.svg",
+                         insert=(width_mm/2 - 15, height_mm/2 - 60 + 110), size=(40, 40)))
+    athletes.add(add_svg(dwg, base/"sports"/"tennisplayer.svg",
+                         insert=(width_mm/2 + 27, height_mm/2 - 60 + 110), size=(40, 40)))
+
 
     dwg.add(athletes)
 
@@ -99,26 +103,25 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     #promotion = ("Find Sports Buddies! Interested in connecting with others for sports activities? "
     #             "We want to build an App for this!")
 
-    promotion = ["🏃‍♀️ The app that makes finding a sports buddy easy! 🏀",
+    promotion = ["🏃 Coming Soon: MoveTogether.now 🏀",
+                 "Find your perfect sports buddy — anytime, anywhere!",
                  "",
-                 "Ever wanted to play tennis, football, or go hiking but couldn’t ",
-                 "find anyone to join?",
+                 "Tired of skipping tennis, football, or a hike because ",
+                 "no one’s free?",
                  "",
-                 "MoveTogether.now is a digital platform (launching soon!) ",
-                 "that connects you with people nearby who want to play ",
-                 "the same sport, at your skill level, at the time that works ",
-                 "for you.",
+                 "MoveTogether.now (launching soon!) connects you with ",
+                 "people nearby who want to play the same sport, at your ",
+                 "skill level, at the right time.",
                  "",
                  "✨ Why you’ll love it:",
-                 "✅ Huge variety of sports to choose from",
-                 "✅ Meet at parks, courts, and outdoor spots — ",
-                 "no gym membership needed",
-                 "✅ Match by activity, location, time, and skill level",
-                 "✅ Create or join activities with just a few taps",
+                 "✅ Wide range of sports",
+                 "✅ Meet in parks, courts & outdoor spots",
+                 "✅ Match by skill, location & time",
+                 "✅ Create or join activities in seconds",
                  "",
                  "🚀 Be the first to join!",
-                 "👉 Scan the QR code, take our short survey and get early",
-                 " access updates."
+                 "👉 Scan the QR code, take our short survey & get early ",
+                 "access updates.",
                  ]
 
     x, y = width_mm/2, height_mm/2 - 80
@@ -132,24 +135,20 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     #                 font_style="italic", fill=shadow))
 
     dwg.add(dwg.text(title, insert=(x, y), text_anchor="middle",
-                    font_size="15px", font_family="CustomFont, sans-serif",
-                      font_style="italic", fill=color))
+                    font_size="15px", font_family="CustomFont, sans-serif", fill=color))
 
     #dwg.add(dwg.text(subtitle, insert=(x+off, y+off + 15), text_anchor="middle",
     #                 font_size="15px", font_family="CustomFont, sans-serif",
     #                 font_style="italic", fill=shadow))
 
     dwg.add(dwg.text(subtitle, insert=(x, y + 15), text_anchor="middle",
-                        font_size="15px", font_family="CustomFont, sans-serif",
-                        font_style="italic", fill=color))
+                        font_size="15px", font_family="CustomFont, sans-serif", fill=color))
 
     for i, line in enumerate(promotion):
-        x_shift = 10
-        if 11 <= i <= 15 or i == 19:
-            x_shift = 16
-        if i==13:
-            x_shift = 23
-        dwg.add(dwg.text(line, insert=(x_shift, 50 + 5 * i), font_size="4.2px",
+        x_shift = 14
+        if 11 <= i <= 14 or i == 18:
+            x_shift = x_shift + 6
+        dwg.add(dwg.text(line, insert=(x_shift, 53 + 5 * i), font_size="4.2px",
                          font_family="Montserrat, sans-serif", font_weight="500"))
 
     halo_w, halo_h = 34, 34
