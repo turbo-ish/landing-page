@@ -1,7 +1,3 @@
-from bisect import insort
-from io import BytesIO
-
-import qrcode
 import svgwrite
 from pathlib import Path
 import base64
@@ -12,6 +8,7 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.colormasks import RadialGradiantColorMask
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer, CircleModuleDrawer
 
+PX_TO_MM = 0.264583  # 1px ≈ 0.264583 mm (96 dpi)
 
 def data_uri_from_file(path: Path) -> str:
     mime, _ = mimetypes.guess_type(path.as_posix())
@@ -68,6 +65,7 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     dwg = svgwrite.Drawing(output_file, size=(f"{width_mm}mm", f"{height_mm}mm"),
                            viewBox=f"0 0 {width_mm} {height_mm}")
 
+    # Fond
     dwg.embed_stylesheet(f'''
                         @font-face {{
                             font-family: 'CustomFont';
