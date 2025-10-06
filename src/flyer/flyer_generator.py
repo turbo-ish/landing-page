@@ -37,7 +37,7 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     base = Path("static/assets")
 
     font = None
-    with open('custom_font.txt', 'r') as f:
+    with open('static/custom_font.txt', 'r') as f:
         font = f.read()
 
     data = "https://movetogether.now/" + lang + "/" + str(qr_id)

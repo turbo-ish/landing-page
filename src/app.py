@@ -8,7 +8,7 @@ from markupsafe import Markup
 from dbhandler import add_vote_record, add_loc_record, add_email_record, add_sports_records
 from qr_svg import make_qr_border_svg  # pls no "from src.qr_svg" or will break on server
 from translations import get_text, get_sports_list, is_valid_lang, get_default_lang
-from src.flyer.flyer_generator import create_flyer
+from flyer.flyer_generator import create_flyer
 
 if os.environ.get('RUNNING_IN_DOCKER'):
     DB_PATH = '/app/data/myfuckingdb.db'
