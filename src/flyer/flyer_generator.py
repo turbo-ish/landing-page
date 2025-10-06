@@ -34,7 +34,7 @@ def add_svg(dwg, path: Path, insert, size, opacity=0.7):
 
 def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     width_mm, height_mm = 148, 210
-    base = Path("assets")
+    base = Path("static/assets")
 
     font = None
     with open('custom_font.txt', 'r') as f:
@@ -86,10 +86,10 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     #                     insert=(width_mm/2 - 65, height_mm/2 - 100), size=(40, 40)))
     if lang == "en":
         athletes.add(add_svg(dwg, base/"sports"/"basketplayer.svg",
-                             insert=(width_mm/2 + 30 , height_mm/2 - 15), size=(40, 40)))
+                             insert=(width_mm/2 + 32 , height_mm/2 - 21), size=(40, 40)))
     elif lang == "nl":
         athletes.add(add_svg(dwg, base / "sports" / "basketplayer.svg",
-                             insert=(width_mm / 2 + 30, height_mm / 2 - 20), size=(40, 40)))
+                             insert=(width_mm / 2 + 32, height_mm / 2 - 22), size=(40, 40)))
 
     athletes.add(add_svg(dwg, base/"sports"/"bicycle.svg",
                          insert=(width_mm/2 - 67, height_mm/2 - 60 + 113), size=(40, 40)))
@@ -107,42 +107,43 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     #promotion = ("Find Sports Buddies! Interested in connecting with others for sports activities? "
     #             "We want to build an App for this!")
 
-    promotion = {"en": ["🏃 Coming Soon: MoveTogether.now 🏀",
-                        "Find your perfect sports buddy — anytime, anywhere!",
+    promotion = {"en": ["🏃 Coming Soon: MoveTogether.now 🏓",
+                        "Find your perfect match for 1-on-1 sports!",
                         "",
-                        "Tired of skipping tennis, football, or a hike because ",
-                        "no one’s free?",
+                        "Want to play tennis, badminton, or table tennis — ",
+                        "but no one’s free to join?",
                         "",
-                        "MoveTogether.now (launching soon!) connects you with ",
-                        "people nearby who want to play the same sport, at your ",
-                        "skill level, at the right time.",
+                        "MoveTogether.now (launching soon!) helps you quickly ",
+                        "find people nearby with the same skill level and ",
+                        "sport interests.",
                         "",
                         "✨ Why you’ll love it:",
-                        "✅ Wide range of sports",
+                        "✅ Find partners for 1-on-1 sports like ",
+                           "tennis, padel, badminton & more",
                         "✅ Meet in parks, courts & outdoor spots",
                         "✅ Match by skill, location & time",
-                        "✅ Create or join activities in seconds",
+                        "✅ Create or join activities in just a few taps",
                         "",
                         "🚀 Be the first to join!",
                         "👉 Scan the QR code, take our short survey & get early ",
                         "access updates."],
-                 "nl": ["🏃 Binnenkort beschikbaar: MoveTogether.now 🏀",
-                        "Vind je perfecte sportmaatje — altijd en overal!",
+                 "nl": ["🏃 Binnenkort beschikbaar: MoveTogether.now 🏓",
+                        "Vind jouw ideale sportmaatje voor 1-op-1 sporten!",
                         "",
-                        "Ben je het zat om tennis, voetbal of een wandeling over ",
-                        "te slaan omdat niemand tijd heeft?",
+                        "Zin om te tennissen, padellen of tafeltennissen — ",
+                        "maar niemand heeft tijd?",
                         "",
-                        "MoveTogether.now (binnenkort te downloaden!) verbindt je ",
-                        "met mensen in de buurt die dezelfde sport willen doen, ",
-                        "op jouw niveau en op een moment dat past.",
+                        "MoveTogether.now (binnenkort te downloaden!) helpt je ",
+                        "snel iemand in de buurt te vinden met hetzelfde niveau ",
+                        "en dezelfde sportinteresses.",
                         "",
                         "✨ Hoogtepunten:",
-                        "✅ Grote keuze aan sporten",
-                        "✅ Ontmoet elkaar in parken, ",
-                        "sportvelden en buitenlocaties",
-                        "✅ Match op vaardigheidsniveau, ",
-                        "locatie en tijd",
-                        "✅ Maak of sluit je aan bij activiteiten in enkele seconden",
+                        "✅ Voor 1-op-1 sporten zoals tennis, ",
+                           "padel & meer ",
+                        "✅ Ontmoet mensen in jouw buurt",
+                        "✅ Match op niveau, locatie en tijd",
+                        "✅ Maak of sluit je aan bij sportactiviteiten ",
+                            "in een paar tikken",
                         "",
                         "🚀 We lanceren binnenkort — doe als eerste mee!",
                         "👉 Scan de QR-code, vul onze korte vragenlijst in en ",
@@ -173,14 +174,16 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
         x_shift = 14
         y_shift = 53
         if lang == "en":
-            if 11 <= i <= 14 or i == 18:
+            if 11 <= i <= 15 or i == 19:
                 x_shift = x_shift + 6
+            if i == 12:
+                x_shift = x_shift + 7
         elif lang == "nl":
             x_shift = 12
             y_shift = 48
-            if 11 <= i <= 16 or i == 20:
+            if 11 <= i <= 17 or i == 29:
                 x_shift = x_shift + 6
-            if i == 13 or i == 15:
+            if i == 12 or i == 16 or i == 20:
                 x_shift = x_shift + 7
         dwg.add(dwg.text(line, insert=(x_shift, y_shift + 5 * i), font_size="4.2px",
                          font_family="Montserrat, sans-serif", font_weight="500"))
@@ -200,8 +203,7 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     logo.attribs["preserveAspectRatio"] = "xMidYMid meet"
     dwg.add(logo)
 
-    dwg.save()
-    print(f"flyer generated : {output_file}")
+    return dwg.tostring()
 
 if __name__ == "__main__":
-    create_flyer(lang="nl", qr_id=1)
+    create_flyer(lang="en", qr_id=1)

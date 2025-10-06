@@ -13,6 +13,7 @@ from werkzeug.utils import send_file
 
 from dbhandler import add_vote_record, add_loc_record, add_email_record
 from qr_svg import make_qr_border_svg #pls no "from src.qr_svg" or will break on server
+from src.flyer.flyer_generator import create_flyer
 
 if os.environ.get('RUNNING_IN_DOCKER'):
     # Docker path - uses the volume mount
@@ -62,17 +63,13 @@ def landing(qr_id: int):
 
 @app.route('/<int:qr_id>/qr', methods=['GET'])
 def gen_qrcode(qr_id: int):
-    # data = "https://movetogether.now/" + str(qr_id)
-    # img = make(data, image_factory=qrcode.image.svg.SvgPathImage, version=10)
-
-    # buffer = BytesIO()
-    # img.save(buffer)
-    # buffer.seek(0)
     img_svg = make_qr_border_svg(qr_id)
 
-    root = parseString(img_svg)
-    path = root.firstChild.firstChild.toprettyxml()
-    print(path)
+    return render_template("qr.html", svg=Markup(img_svg))
+
+@app.route('/<lang>/<int:qr_id>/flyer', methods=['GET'])
+def gen_flyer(lang: str, qr_id: int):
+    img_svg = create_flyer(lang=lang, qr_id=qr_id)
 
     return render_template("qr.html", svg=Markup(img_svg))
 
