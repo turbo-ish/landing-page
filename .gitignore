@@ -3,3 +3,4 @@ LandingPage.iml
 venv/
 myfuckingdb.db
 /src/__pycache__/
+*__pycache__*
