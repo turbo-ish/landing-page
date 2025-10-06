@@ -24,7 +24,7 @@ def data_uri_from_file(path: Path) -> str:
         b64 = base64.b64encode(path.read_bytes()).decode("ascii")
         return f"data:{mime};base64,{b64}"
 
-def add_svg(dwg, path: Path, insert, size, opacity=0.15):
+def add_svg(dwg, path: Path, insert, size, opacity=0.7):
     uri = data_uri_from_file(path)
     img = dwg.image(href=uri, insert=insert, size=size)
     img.attribs["preserveAspectRatio"] = "xMidYMid meet"
@@ -80,19 +80,23 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
 
     athletes = dwg.g(id="athletes", opacity=1)
 
-    athletes.add(add_svg(dwg, base/"sports"/"soccer.svg",
-                         insert=(width_mm/2 - 15, height_mm/2 - 100), size=(40, 40)))
-    athletes.add(add_svg(dwg, base/"sports"/"runner.svg",
-                         insert=(width_mm/2 - 65, height_mm/2 - 100), size=(40, 40)))
-    athletes.add(add_svg(dwg, base/"sports"/"basketplayer.svg",
-                         insert=(width_mm/2 + 30 , height_mm/2 - 100), size=(40, 40)))
+    #athletes.add(add_svg(dwg, base/"sports"/"soccer.svg",
+    #                     insert=(width_mm/2 - 15, height_mm/2 - 100), size=(40, 40)))
+    #athletes.add(add_svg(dwg, base/"sports"/"runner.svg",
+    #                     insert=(width_mm/2 - 65, height_mm/2 - 100), size=(40, 40)))
+    if lang == "en":
+        athletes.add(add_svg(dwg, base/"sports"/"basketplayer.svg",
+                             insert=(width_mm/2 + 30 , height_mm/2 - 15), size=(40, 40)))
+    elif lang == "nl":
+        athletes.add(add_svg(dwg, base / "sports" / "basketplayer.svg",
+                             insert=(width_mm / 2 + 30, height_mm / 2 - 20), size=(40, 40)))
 
     athletes.add(add_svg(dwg, base/"sports"/"bicycle.svg",
-                         insert=(width_mm/2 - 67, height_mm/2 - 60 + 110), size=(40, 40)))
+                         insert=(width_mm/2 - 67, height_mm/2 - 60 + 113), size=(40, 40)))
     athletes.add(add_svg(dwg, base/"sports"/"fitness.svg",
-                         insert=(width_mm/2 - 15, height_mm/2 - 60 + 110), size=(40, 40)))
+                         insert=(width_mm/2 - 15, height_mm/2 - 60 + 113), size=(40, 40)))
     athletes.add(add_svg(dwg, base/"sports"/"tennisplayer.svg",
-                         insert=(width_mm/2 + 27, height_mm/2 - 60 + 110), size=(40, 40)))
+                         insert=(width_mm/2 + 27, height_mm/2 - 60 + 113), size=(40, 40)))
 
 
     dwg.add(athletes)
@@ -103,26 +107,47 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     #promotion = ("Find Sports Buddies! Interested in connecting with others for sports activities? "
     #             "We want to build an App for this!")
 
-    promotion = ["🏃 Coming Soon: MoveTogether.now 🏀",
-                 "Find your perfect sports buddy — anytime, anywhere!",
-                 "",
-                 "Tired of skipping tennis, football, or a hike because ",
-                 "no one’s free?",
-                 "",
-                 "MoveTogether.now (launching soon!) connects you with ",
-                 "people nearby who want to play the same sport, at your ",
-                 "skill level, at the right time.",
-                 "",
-                 "✨ Why you’ll love it:",
-                 "✅ Wide range of sports",
-                 "✅ Meet in parks, courts & outdoor spots",
-                 "✅ Match by skill, location & time",
-                 "✅ Create or join activities in seconds",
-                 "",
-                 "🚀 Be the first to join!",
-                 "👉 Scan the QR code, take our short survey & get early ",
-                 "access updates.",
-                 ]
+    promotion = {"en": ["🏃 Coming Soon: MoveTogether.now 🏀",
+                        "Find your perfect sports buddy — anytime, anywhere!",
+                        "",
+                        "Tired of skipping tennis, football, or a hike because ",
+                        "no one’s free?",
+                        "",
+                        "MoveTogether.now (launching soon!) connects you with ",
+                        "people nearby who want to play the same sport, at your ",
+                        "skill level, at the right time.",
+                        "",
+                        "✨ Why you’ll love it:",
+                        "✅ Wide range of sports",
+                        "✅ Meet in parks, courts & outdoor spots",
+                        "✅ Match by skill, location & time",
+                        "✅ Create or join activities in seconds",
+                        "",
+                        "🚀 Be the first to join!",
+                        "👉 Scan the QR code, take our short survey & get early ",
+                        "access updates."],
+                 "nl": ["🏃 Binnenkort beschikbaar: MoveTogether.now 🏀",
+                        "Vind je perfecte sportmaatje — altijd en overal!",
+                        "",
+                        "Ben je het zat om tennis, voetbal of een wandeling over ",
+                        "te slaan omdat niemand tijd heeft?",
+                        "",
+                        "MoveTogether.now (binnenkort te downloaden!) verbindt je ",
+                        "met mensen in de buurt die dezelfde sport willen doen, ",
+                        "op jouw niveau en op een moment dat past.",
+                        "",
+                        "✨ Hoogtepunten:",
+                        "✅ Grote keuze aan sporten",
+                        "✅ Ontmoet elkaar in parken, ",
+                        "sportvelden en buitenlocaties",
+                        "✅ Match op vaardigheidsniveau, ",
+                        "locatie en tijd",
+                        "✅ Maak of sluit je aan bij activiteiten in enkele seconden",
+                        "",
+                        "🚀 We lanceren binnenkort — doe als eerste mee!",
+                        "👉 Scan de QR-code, vul onze korte vragenlijst in en ",
+                        "ontvang updates over de lancering."]
+                 }
 
     x, y = width_mm/2, height_mm/2 - 80
     style = "letter-spacing:1px; word-spacing:6px;"
@@ -144,22 +169,31 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     dwg.add(dwg.text(subtitle, insert=(x, y + 15), text_anchor="middle",
                         font_size="15px", font_family="CustomFont, sans-serif", fill=color))
 
-    for i, line in enumerate(promotion):
+    for i, line in enumerate(promotion[lang]):
         x_shift = 14
-        if 11 <= i <= 14 or i == 18:
-            x_shift = x_shift + 6
-        dwg.add(dwg.text(line, insert=(x_shift, 53 + 5 * i), font_size="4.2px",
+        y_shift = 53
+        if lang == "en":
+            if 11 <= i <= 14 or i == 18:
+                x_shift = x_shift + 6
+        elif lang == "nl":
+            x_shift = 12
+            y_shift = 48
+            if 11 <= i <= 16 or i == 20:
+                x_shift = x_shift + 6
+            if i == 13 or i == 15:
+                x_shift = x_shift + 7
+        dwg.add(dwg.text(line, insert=(x_shift, y_shift + 5 * i), font_size="4.2px",
                          font_family="Montserrat, sans-serif", font_weight="500"))
 
     halo_w, halo_h = 34, 34
     halo_x, halo_y = width_mm/2 - halo_w/2, 160
 
-    logo_w, logo_h = 20, 20
-    logo_x, logo_y = width_mm/2 - logo_w/2, halo_y + (halo_h - logo_h)/2
+    qr_width = 45
+    logo_w, logo_h = qr_width * 2/5, qr_width * 2/5
+    logo_x, logo_y = width_mm / 2 - logo_w / 2, halo_y + (halo_h - logo_h) / 2
 
-    qr_width = 50
     dwg.add(dwg.image(href=f'''data:image/jpeg;charset=utf-8;base64,{img_base64}''', x=x - qr_width / 2,
-                      y=logo_y + logo_w / 2 - qr_width / 2, width=50))
+                      y=logo_y + logo_w / 2 - qr_width / 2, width=qr_width))
 
     logo_uri = data_uri_from_file(base/"logos"/"logo_round.png")
     logo = dwg.image(href=logo_uri, insert=(logo_x, logo_y), size=(logo_w, logo_h))
@@ -170,4 +204,4 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     print(f"flyer generated : {output_file}")
 
 if __name__ == "__main__":
-    create_flyer(lang="en", qr_id=1)
+    create_flyer(lang="nl", qr_id=1)
