@@ -14,6 +14,7 @@ from werkzeug.utils import send_file
 from dbhandler import add_vote_record, add_loc_record, add_email_record, add_sports_records
 from qr_svg import make_qr_border_svg #pls no "from src.qr_svg" or will break on server
 from translations import get_text, get_sports_list, is_valid_lang, get_default_lang
+from src.flyer.flyer_generator import create_flyer
 
 if os.environ.get('RUNNING_IN_DOCKER'):
     DB_PATH = '/app/data/myfuckingdb.db'
@@ -37,11 +38,11 @@ def thanks(lang=None):
     """Thank you page with language support."""
     if lang is None or not is_valid_lang(lang):
         lang = request.cookies.get('language', get_default_lang())
-    
+
     show_email = request.cookies.get('show_email_form', '0')
-    
+
     return render_template(
-        'thank_you.html', 
+        'thank_you.html',
         show_email=show_email,
         lang=lang,
         t=lambda key: get_text(lang, key)
@@ -64,11 +65,11 @@ def landing(lang: str, qr_id: int):
     if not is_valid_lang(lang):
         # Redirect to default language if invalid
         return redirect(url_for('landing', lang=get_default_lang(), qr_id=qr_id))
-    
+
     if request.method == 'POST':
         # Add language to form data for database storage
         form_data_with_lang = request.form.copy()
-        
+
         # Handle the vote submission
         vote_id = add_vote_record(db, form_data_with_lang, request.cookies, lang)
 
@@ -90,7 +91,7 @@ def landing(lang: str, qr_id: int):
     
     # Handle GET request - show the voting form
     return render_template(
-        'landing.html', 
+        'landing.html',
         qr_id=qr_id,
         lang=lang,
         t=lambda key: get_text(lang, key)
@@ -102,10 +103,10 @@ def sports_selection(lang):
     """Sports selection page - shown after user clicks 'Yes'."""
     if not is_valid_lang(lang):
         lang = get_default_lang()
-    
+
     # Get sports list for the selected language
     sports_list = get_sports_list(lang)
-    
+
     return render_template(
         'sports_selection.html',
         lang=lang,
@@ -119,15 +120,15 @@ def save_sports(lang):
     """Save selected sports to database."""
     if not is_valid_lang(lang):
         lang = request.cookies.get('language', get_default_lang())
-    
+
     # Save sports selections
     add_sports_records(db, request.form, request.cookies, lang)
-    
+
     # Redirect to thank you page with email form
     resp = make_response(redirect(url_for('thanks', lang=lang)))
     resp.set_cookie('show_email_form', '1')
     resp.set_cookie('language', lang)
-    
+
     return resp
 
 
@@ -147,9 +148,12 @@ def gen_qrcode(lang: str, qr_id: int):
     else:
         img_svg = make_qr_border_svg(qr_id, top_text="movetogether.now", bottom_text="SCAN ME · DO SPORTS NOW")
 
-    root = parseString(img_svg)
-    path = root.firstChild.firstChild.toprettyxml()
-    print(path)
+    return render_template("qr.html", svg=Markup(img_svg))
+
+
+@app.route('/<lang>/<int:qr_id>/flyer', methods=['GET'])
+def gen_flyer(lang: str, qr_id: int):
+    img_svg = create_flyer(lang=lang, qr_id=qr_id)
 
     return render_template("qr.html", svg=Markup(img_svg))
 
@@ -169,14 +173,14 @@ def save_email(lang=None):
     """Save email with language support."""
     if lang is None or not is_valid_lang(lang):
         lang = request.cookies.get('language', get_default_lang())
-    
+
     # Save posted email with language
     add_email_record(db, request.form, request.cookies, lang)
-    
+
     resp = make_response(redirect(url_for('thanks', lang=lang)))
     resp.set_cookie('show_email_form', '0')
     resp.set_cookie('language', lang)
-    
+
     return resp
 
 
