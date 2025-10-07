@@ -86,10 +86,10 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     #                     insert=(width_mm/2 - 65, height_mm/2 - 100), size=(40, 40)))
     if lang == "en":
         athletes.add(add_svg(dwg, base/"sports"/"basketplayer.svg",
-                             insert=(width_mm/2 + 32 , height_mm/2 - 21), size=(40, 40)))
+                             insert=(width_mm/2 + 32 , height_mm/2 - 15), size=(40, 40)))
     elif lang == "nl":
         athletes.add(add_svg(dwg, base / "sports" / "basketplayer.svg",
-                             insert=(width_mm / 2 + 32, height_mm / 2 - 22), size=(40, 40)))
+                             insert=(width_mm / 2 + 32, height_mm / 2 - 14), size=(40, 40)))
 
     athletes.add(add_svg(dwg, base/"sports"/"bicycle.svg",
                          insert=(width_mm/2 - 67, height_mm/2 - 60 + 113), size=(40, 40)))
@@ -107,49 +107,51 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
     #promotion = ("Find Sports Buddies! Interested in connecting with others for sports activities? "
     #             "We want to build an App for this!")
 
-    promotion = {"en": ["🏃 Coming Soon: MoveTogether.now 🏓",
-                        "Find your perfect match for 1-on-1 sports!",
-                        "",
-                        "Want to play tennis, badminton, or table tennis — ",
-                        "but no one’s free to join?",
-                        "",
-                        "MoveTogether.now (launching soon!) helps you quickly ",
-                        "find people nearby with the same skill level and ",
-                        "sport interests.",
-                        "",
-                        "✨ Why you’ll love it:",
-                        "✅ Find partners for 1-on-1 sports like ",
-                           "tennis, padel, badminton & more",
-                        "✅ Meet in parks, courts & outdoor spots",
-                        "✅ Match by skill, location & time",
-                        "✅ Create or join activities in just a few taps",
-                        "",
-                        "🚀 Be the first to join!",
-                        "👉 Scan the QR code, take our short survey & get early ",
-                        "access updates."],
-                 "nl": ["🏃 Binnenkort beschikbaar: MoveTogether.now 🏓",
-                        "Vind jouw ideale sportmaatje voor 1-op-1 sporten!",
-                        "",
-                        "Zin om te tennissen, padellen of tafeltennissen — ",
-                        "maar niemand heeft tijd?",
-                        "",
-                        "MoveTogether.now (binnenkort te downloaden!) helpt je ",
-                        "snel iemand in de buurt te vinden met hetzelfde niveau ",
-                        "en dezelfde sportinteresses.",
-                        "",
-                        "✨ Hoogtepunten:",
-                        "✅ Voor 1-op-1 sporten zoals tennis, ",
-                           "padel & meer ",
-                        "✅ Ontmoet mensen in jouw buurt",
-                        "✅ Match op niveau, locatie en tijd",
-                        "✅ Maak of sluit je aan bij sportactiviteiten ",
-                            "in een paar tikken",
-                        "",
-                        "🚀 We lanceren binnenkort — doe als eerste mee!",
-                        "👉 Scan de QR-code, vul onze korte vragenlijst in en ",
-                        "ontvang updates over de lancering."]
-                 }
-
+    promotion = {
+        "en": [
+            "🏃 Coming Soon: MoveTogether.now 🏓",
+            "Find your perfect match for 1-on-1 sports!",
+            "",
+            "Want to play table tennis, badminton, or chess, ",
+            "but no one's free to join?",
+            "",
+            "MoveTogether.now helps you quickly find people nearby ",
+            "with the same skill level and sport interests.",
+            "",
+            "✨ Why you'll love it:",
+            "✅ For 1-on-1 outdoor sports like table tennis, ",
+                "badminton & chess",
+            "✅ Meet at parks & outdoor spots",
+            "✅ Match by skill, location & time",
+            "✅ Create or join activities in seconds",
+            "",
+            "🚀 Join our founding community!",
+            "📍 Building a community of players in Nijmegen",
+            "👉 Scan the QR code to join the waitlist!",
+        ],
+        "nl": [
+            "🏃 Binnenkort beschikbaar: MoveTogether.now 🏓",
+            "Vind jouw ideale sportmaatje voor 1-op-1 sporten!",
+            "",
+            "Zin om te tafeltennissen, badmintonnen of te schaken, ",
+            "maar niemand heeft tijd?",
+            "",
+            "MoveTogether.now helpt je snel iemand in de buurt te ",
+            "vinden met hetzelfde niveau en dezelfde sportinteresses.",
+            "",
+            "✨ Hoogtepunten:",
+            "✅ Voor 1-op-1 buitensporten zoals tafeltennis, ",
+            "   badminton & schaken",
+            "✅ Ontmoet mensen in je buurt",
+            "✅ Match op niveau, locatie en tijd",
+            "✅ Maak of sluit je aan bij sportactiviteiten ",
+            "   in een paar seconden",
+            "",
+            "🚀 Word lid van onze founding community!",
+            "📍 We bouwen een community van spelers in Nijmegen",
+            "👉 Scan de QR-code om je aan te melden!",
+        ]
+    }
     x, y = width_mm/2, height_mm/2 - 80
     style = "letter-spacing:1px; word-spacing:6px;"
     shadow = "#eeeeee"
@@ -174,16 +176,16 @@ def create_flyer(lang: str, qr_id: int, output_file="flyer_a5.svg"):
         x_shift = 14
         y_shift = 53
         if lang == "en":
-            if 11 <= i <= 15 or i == 19:
+            if 10 <= i <= 15 or i == 19:
                 x_shift = x_shift + 6
-            if i == 12:
+            if i == 11:
                 x_shift = x_shift + 7
         elif lang == "nl":
             x_shift = 12
-            y_shift = 48
-            if 11 <= i <= 17 or i == 29:
+            y_shift = 53
+            if 10 <= i <= 15 or i == 29:
                 x_shift = x_shift + 6
-            if i == 12 or i == 16 or i == 20:
+            if i == 11 or i == 15 or i == 20:
                 x_shift = x_shift + 7
         dwg.add(dwg.text(line, insert=(x_shift, y_shift + 5 * i), font_size="4.2px",
                          font_family="Montserrat, sans-serif", font_weight="500"))
