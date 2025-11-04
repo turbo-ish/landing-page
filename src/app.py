@@ -17,10 +17,10 @@ else:
 
 db = sqlite3.connect(DB_PATH, check_same_thread=False)
 cur = db.cursor()
-cur.execute("CREATE TABLE IF NOT EXISTS qr2loc (id INTEGER PRIMARY KEY AUTOINCREMENT, lat FLOAT, lng FLOAT);")
-cur.execute("CREATE TABLE IF NOT EXISTS vote2qr (id INTEGER PRIMARY KEY AUTOINCREMENT, response TEXT, qr_id INTEGER, language TEXT);")
-cur.execute("CREATE TABLE IF NOT EXISTS email_signups (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, vote_id INTEGER, language TEXT);")
-cur.execute("CREATE TABLE IF NOT EXISTS user_sports (id INTEGER PRIMARY KEY AUTOINCREMENT, vote_id INTEGER, sport TEXT, is_custom BOOLEAN, language TEXT);")
+cur.execute("CREATE TABLE IF NOT EXISTS qr2loc (id INTEGER PRIMARY KEY AUTOINCREMENT, lat FLOAT, lng FLOAT, created_at TEXT);")
+cur.execute("CREATE TABLE IF NOT EXISTS vote2qr (id INTEGER PRIMARY KEY AUTOINCREMENT, response TEXT, qr_id INTEGER, language TEXT, created_at TEXT, updated_at TEXT);")
+cur.execute("CREATE TABLE IF NOT EXISTS email_signups (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, vote_id INTEGER, language TEXT, created_at TEXT);")
+cur.execute("CREATE TABLE IF NOT EXISTS user_sports (id INTEGER PRIMARY KEY AUTOINCREMENT, vote_id INTEGER, sport TEXT, is_custom BOOLEAN, language TEXT, created_at TEXT);")
 cur.close()
 
 app = Flask(__name__)
