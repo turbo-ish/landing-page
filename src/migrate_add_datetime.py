@@ -16,7 +16,7 @@ from datetime import datetime
 #else:
 #    DB_PATH = '../myfuckingdb.db'
 
-DB_Path = '../data/myfuckingdb.db' #hacky af third special case where we are on the server but not currently running in docker
+DB_PATH = '../data/myfuckingdb.db' #hacky af third special case where we are on the server but not currently running in docker
 
 def migrate_database():
     """Add datetime columns to all tables."""
