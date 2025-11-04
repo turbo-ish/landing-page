@@ -73,6 +73,7 @@ def add_email_record(db: sqlite3.Connection, form: ImmutableMultiDict, cookies: 
         vote_id_int = None
 
     timestamp = datetime.now().isoformat()
+    print(f"DEBUG: add_email_record - timestamp={timestamp}, email={email}, vote_id={vote_id_int}")
 
     cur = db.cursor()
     cur.execute(
@@ -82,6 +83,7 @@ def add_email_record(db: sqlite3.Connection, form: ImmutableMultiDict, cookies: 
     last_id = cur.lastrowid
     db.commit()
     cur.close()
+    print(f"DEBUG: add_email_record - inserted with id={last_id}")
     return last_id
 
 
@@ -104,6 +106,7 @@ def add_sports_records(db: sqlite3.Connection, form: ImmutableMultiDict, cookies
         return None
 
     timestamp = datetime.now().isoformat()
+    print(f"DEBUG: add_sports_records - timestamp={timestamp}, vote_id={vote_id_int}")
 
     cur = db.cursor()
 
@@ -116,6 +119,7 @@ def add_sports_records(db: sqlite3.Connection, form: ImmutableMultiDict, cookies
     # Insert each selected predefined sport
     for sport in selected_sports:
         if sport.strip():
+            print(f"DEBUG: Inserting sport={sport}, timestamp={timestamp}")
             cur.execute(
                 "INSERT INTO user_sports (vote_id, sport, is_custom, language, created_at) VALUES (?, ?, ?, ?, ?);",
                 (vote_id_int, sport.strip(), False, language, timestamp)
@@ -124,6 +128,7 @@ def add_sports_records(db: sqlite3.Connection, form: ImmutableMultiDict, cookies
     # Get custom sport from text field
     custom_sport = form.get('custom_sport', '').strip()
     if custom_sport:
+        print(f"DEBUG: Inserting custom sport={custom_sport}, timestamp={timestamp}")
         cur.execute(
             "INSERT INTO user_sports (vote_id, sport, is_custom, language, created_at) VALUES (?, ?, ?, ?, ?);",
             (vote_id_int, custom_sport, True, language, timestamp)
@@ -131,5 +136,6 @@ def add_sports_records(db: sqlite3.Connection, form: ImmutableMultiDict, cookies
 
     db.commit()
     cur.close()
+    print(f"DEBUG: add_sports_records - committed")
 
     return vote_id_int
