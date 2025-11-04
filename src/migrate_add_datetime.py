@@ -11,10 +11,12 @@ import sqlite3
 from datetime import datetime
 
 # Determine database path based on environment
-if os.environ.get('RUNNING_IN_DOCKER'):
-    DB_PATH = '/app/data/myfuckingdb.db'
-else:
-    DB_PATH = '../myfuckingdb.db'
+#if os.environ.get('RUNNING_IN_DOCKER'):
+#    DB_PATH = '/app/data/myfuckingdb.db'
+#else:
+#    DB_PATH = '../myfuckingdb.db'
+
+DB_Path = '../data/myfuckingdb.db' #hacky af third special case where we are on the server but not currently running in docker
 
 def migrate_database():
     """Add datetime columns to all tables."""
