@@ -32,6 +32,12 @@ def index():
     return redirect(url_for('landing', lang=get_default_lang(), qr_id=500))
 
 
+@app.route('/health')
+def health():
+    """Health check endpoint for Docker."""
+    return {'status': 'healthy'}, 200
+
+
 @app.route('/thank_you')
 @app.route('/<lang>/thank_you')
 def thanks(lang=None):
